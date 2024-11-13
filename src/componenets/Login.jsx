@@ -1,10 +1,12 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Providers/AuthProvider";
 import { Result } from "postcss";
 
 const Login = () => {
-  const { signIn } = useContext(AuthContext);
+  const { signIn ,signInwithgoogle} = useContext(AuthContext);
+
+  const navigate = useNavigate()
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -17,11 +19,22 @@ const Login = () => {
     signIn(email, password)
       .then((result) => {
         console.log(result.user);
+        e.target.reset()
+        navigate("/orders")
       })
       .catch((error) => {
         console.log("error", error.message);
       });
   };
+
+  const handleGoogleSignIn =()=>{
+    signInwithgoogle()
+    .then(result => {
+        console.log(result.user)
+        navigate('/')
+    })
+    .catch(error => console.log(error.message))
+  }
 
   return (
     <div className="hero bg-base-200 min-h-screen">
@@ -70,6 +83,9 @@ const Login = () => {
               {" "}
               Register
             </Link>
+          </p>
+          <p>
+            <button onClick={handleGoogleSignIn} className="btn btn-ghost">Google</button>
           </p>
         </div>
       </div>
